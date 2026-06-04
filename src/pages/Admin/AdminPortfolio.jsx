@@ -12,6 +12,7 @@ import ImageUpload from '../../components/ui/ImageUpload'
 import MultiImageUpload from '../../components/ui/MultiImageUpload'
 import TitleWithHeartDivider from '../../components/ui/TitleWithHeartDivider'
 import { toFormData } from '../../utils'
+import { hasCloudinaryUploadConfig, uploadFilesToCloudinary } from '../../utils/cloudinary'
 import { resolveWeddingGalleryPhase } from '../../data/portfolioCategories'
 
 const preventNumberScroll = (event) => {
@@ -98,24 +99,88 @@ export default function AdminPortfolio() {
     setGalleryUploadPhase('')
   }
 
-  const buildSubmissionPayload = (data) => ({
+  const shouldClearGalleryUploads = () => galleryUploads.length > 0 || removedGalleryImageIds.length > 0
+
+  const getSelectedFile = (value) => {
+    if (!value) return null
+    if (typeof FileList !== 'undefined' && value instanceof FileList) return value[0] || null
+    if (Array.isArray(value)) return value[0] || null
+    if (typeof File !== 'undefined' && value instanceof File) return value
+    return null
+  }
+
+  const uploadMainImage = async (value) => {
+    const file = getSelectedFile(value)
+    if (!(file instanceof File)) return null
+
+    const [result] = await uploadFilesToCloudinary([file], { maxWidth: 2200, maxHeight: 2200, quality: 0.86 })
+    return result?.publicId || null
+  }
+
+  const uploadGalleryBatch = async () => {
+    if (!galleryUploads.length) return []
+
+    const files = galleryUploads.map((upload) => upload.file)
+    const results = await uploadFilesToCloudinary(files, { maxWidth: 1800, maxHeight: 1800, quality: 0.84 })
+
+    return results.map((result, index) => ({
+      publicId: result.publicId,
+      shootPhase: galleryUploads[index]?.shootPhase || '',
+    }))
+  }
+
+  const buildLegacyPayload = (data) => ({
     ...data,
     removed_gallery_image_ids: removedGalleryImageIds,
     gallery_uploads: galleryUploads.map((upload) => upload.file),
     gallery_upload_shoot_phases: galleryUploads.map((upload) => upload.shootPhase || ''),
   })
 
-  const shouldClearGalleryUploads = () => galleryUploads.length > 0 || removedGalleryImageIds.length > 0
+  const buildDirectPayload = (data, mainImagePublicId, galleryResults) => {
+    const payload = {
+      ...data,
+      removed_gallery_image_ids: removedGalleryImageIds,
+      gallery_upload_public_ids: galleryResults.map((result) => result.publicId),
+      gallery_upload_shoot_phases: galleryResults.map((result) => result.shootPhase),
+    }
+
+    if (mainImagePublicId) {
+      payload.image_public_id = mainImagePublicId
+    }
+
+    delete payload.image
+    delete payload.gallery_uploads
+    return payload
+  }
+
+  const submitPayload = async (data) => {
+    if (!hasCloudinaryUploadConfig()) {
+      return toFormData(buildLegacyPayload(data))
+    }
+
+    const [mainImagePublicId, galleryResults] = await Promise.all([
+      uploadMainImage(data.image),
+      uploadGalleryBatch(),
+    ])
+
+    return toFormData(buildDirectPayload(data, mainImagePublicId, galleryResults))
+  }
 
   const createMut = useMutation({
-    mutationFn: async (data) => adminCreatePortfolio(toFormData(buildSubmissionPayload(data))),
-    onSuccess: () => { toast.success('Photo added'); invalidate(); if (shouldClearGalleryUploads()) resetGalleryUploads(); setModal(null) },
+    mutationFn: async (data) => {
+      const payload = await submitPayload(data)
+      return adminCreatePortfolio(payload)
+    },
+    onSuccess: () => { toast.success('Photo added'); invalidate(); if (shouldClearGalleryUploads()) resetGalleryUploads(); setRemovedGalleryImageIds([]); setModal(null) },
     onError: (error) => toast.error(getApiErrorMessage(error, 'Failed to add photo')),
   })
 
   const updateMut = useMutation({
-    mutationFn: async ({ id, data }) => adminUpdatePortfolio(id, toFormData(buildSubmissionPayload(data))),
-    onSuccess: () => { toast.success('Photo updated'); invalidate(); if (shouldClearGalleryUploads()) resetGalleryUploads(); setModal(null) },
+    mutationFn: async ({ id, data }) => {
+      const payload = await submitPayload(data)
+      return adminUpdatePortfolio(id, payload)
+    },
+    onSuccess: () => { toast.success('Photo updated'); invalidate(); if (shouldClearGalleryUploads()) resetGalleryUploads(); setRemovedGalleryImageIds([]); setModal(null) },
     onError: (error) => toast.error(getApiErrorMessage(error, 'Failed to update photo')),
   })
 
