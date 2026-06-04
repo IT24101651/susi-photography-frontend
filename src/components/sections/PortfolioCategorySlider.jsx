@@ -4,6 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Navigation, Pagination } from 'swiper/modules'
 import { getCardCaption } from '../../utils/cardOverlay'
 import TitleWithHeartDivider from '../ui/TitleWithHeartDivider'
+import TitleWithAmpersand from '../ui/TitleWithAmpersand'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -40,8 +41,10 @@ export default function PortfolioCategorySlider({
             {eyebrow ? (
               <p className="font-body text-xs uppercase tracking-[0.34em] text-[#b8945b]">{eyebrow}</p>
             ) : null}
-            <h3 className="mt-3 font-times-italic text-[2.2rem] leading-[0.95] tracking-[-0.02em] text-[#2d211a] sm:text-[2.9rem]">{heading}</h3>
-            <p className="mt-3 max-w-xl font-cormorant-medium text-[1.26rem] leading-7 tracking-[0.018em] text-[#7f7265] sm:text-[1.34rem]">{supportingText}</p>
+            <h3 className="mt-3 font-heading text-[2.2rem] leading-[0.95] tracking-[-0.02em] text-[#2d211a] sm:text-[2.9rem]">
+              <TitleWithAmpersand title={heading} />
+            </h3>
+            <p className="mt-3 max-w-xl font-source-serif text-[1.26rem] leading-7 tracking-[0.01em] text-[#7f7265] sm:text-[1.34rem]">{supportingText}</p>
           </div>
 
           <div className="flex items-center gap-3 self-start lg:self-auto">

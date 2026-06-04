@@ -52,7 +52,7 @@ export default function AdminSidebar() {
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-accent flex items-center justify-center text-white font-heading text-sm">S</div>
           <div>
-            <p className="font-heading text-sm text-white tracking-wide">Susi Photography</p>
+            <p className="font-wordmark text-sm text-white tracking-[0.24em]">Susi Photography</p>
             <p className="font-body text-xs text-white/40">Admin Panel</p>
           </div>
         </div>

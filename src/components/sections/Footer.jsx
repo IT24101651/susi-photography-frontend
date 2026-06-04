@@ -143,7 +143,7 @@ export default function Footer() {
                 imageClassName="rounded-full object-cover ring-1 ring-[#f1d39a]/20"
               />
             </div>
-            <p className="mt-4 max-w-md font-cormorant-medium text-[1.08rem] leading-8 tracking-[0.014em] text-[#c7ad89] sm:text-[1.14rem]">
+            <p className="mt-4 max-w-md font-source-serif text-[1.08rem] leading-8 tracking-[0.01em] text-[#c7ad89] sm:text-[1.14rem]">
               {footerText}
             </p>
             <div className="relative mt-5 w-full max-w-[260px]">

@@ -20,7 +20,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen bg-beige flex items-center justify-center px-4">
       <div className="bg-white rounded-2xl shadow-lg p-10 w-full max-w-sm">
-        <h1 className="font-heading text-3xl text-text text-center mb-1">Susi Photography</h1>
+        <h1 className="font-wordmark text-3xl tracking-[0.22em] text-text text-center mb-1">Susi Photography</h1>
         <p className="font-body text-muted text-center text-sm mb-8">Admin Panel</p>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>

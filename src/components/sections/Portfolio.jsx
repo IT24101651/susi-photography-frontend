@@ -39,10 +39,10 @@ export default function Portfolio() {
           <p className="text-center font-editorial text-[0.8rem] font-semibold uppercase tracking-[0.38em] text-[#6f5743] [font-variant:small-caps] sm:text-[0.85rem]">
             Curated Signature Work
           </p>
-          <h2 className="mt-3 text-center font-times-italic text-[2.5rem] leading-[0.98] tracking-[-0.02em] text-[#2d211a] sm:text-[3.5rem]">
+          <h2 className="mt-3 text-center font-heading text-[2.5rem] leading-[0.98] tracking-[-0.02em] text-[#2d211a] sm:text-[3.5rem]">
             Portfolio Collections
           </h2>
-          <p className="mx-auto mt-4 max-w-3xl text-center font-cormorant-medium text-[1.26rem] leading-8 tracking-[0.018em] text-[#7f7265] sm:text-[1.36rem]">
+          <p className="mx-auto mt-4 max-w-3xl text-center font-source-serif text-[1.26rem] leading-8 tracking-[0.01em] text-[#7f7265] sm:text-[1.36rem]">
             Explore each story through refined category sliders designed for a modern luxury studio presentation.
           </p>
         </FadeInUp>

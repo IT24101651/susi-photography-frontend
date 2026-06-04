@@ -34,7 +34,7 @@ export default function About() {
                 <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(184,148,91,0.22),_transparent_38%),linear-gradient(180deg,_#f7f0e6_0%,_#efe4d4_100%)] p-10 text-center">
                   <div>
                     <p className="font-ui text-xs uppercase tracking-[0.32em] text-[#b8945b]">Susi Photography</p>
-                    <p className="mt-5 font-times-italic text-[2rem] leading-[1.02] tracking-[-0.02em] text-[#2d211a]">
+                    <p className="mt-5 font-heading text-[2rem] leading-[1.02] tracking-[-0.02em] text-[#2d211a]">
                       Real moments, told with warmth and intention.
                     </p>
                   </div>
@@ -43,7 +43,7 @@ export default function About() {
             </div>
             <div className="px-3 pb-3 pt-5 text-center sm:px-4 sm:pb-4">
               <div className="inline-flex flex-col items-center">
-                <p className="font-times-italic text-[1.9rem] leading-none tracking-[-0.02em] text-[#b8945b] sm:text-[2.15rem]">Founder</p>
+                <p className="font-heading text-[1.9rem] leading-none tracking-[-0.02em] text-[#b8945b] sm:text-[2.15rem]">Founder</p>
                 <div className="mt-3 flex items-center gap-3 text-[#d1b27d]">
                   <span className="h-px w-16 bg-[#dcc6a2] sm:w-20" />
                   <span className="font-heading text-[0.72rem] leading-none tracking-[0.18em]">•</span>
@@ -58,13 +58,13 @@ export default function About() {
           <p className="mb-4 font-editorial text-[0.78rem] font-semibold uppercase tracking-[0.36em] text-[#6f5743] [font-variant:small-caps]">
             Our Story
           </p>
-          <h2 className="mb-3 font-times-italic text-[2.45rem] leading-[0.98] tracking-[-0.02em] text-text sm:text-[3.25rem]">
+          <h2 className="mb-3 font-heading text-[2.45rem] leading-[0.98] tracking-[-0.02em] text-text sm:text-[3.25rem]">
             {about.heading}
           </h2>
           {about.subheading ? (
-          <p className="mb-6 font-cormorant-medium text-[1.28rem] leading-8 tracking-[0.018em] text-[#72665b] sm:text-[1.36rem]">{about.subheading}</p>
+          <p className="mb-6 font-source-serif text-[1.28rem] leading-8 tracking-[0.01em] text-[#72665b] sm:text-[1.36rem]">{about.subheading}</p>
           ) : null}
-          <div className="whitespace-pre-line font-cormorant-medium text-[1.18rem] leading-8 tracking-[0.018em] text-text/80 sm:text-[1.24rem]">{about.body_text}</div>
+          <div className="whitespace-pre-line font-source-serif text-[1.18rem] leading-8 tracking-[0.01em] text-text/80 sm:text-[1.24rem]">{about.body_text}</div>
         </FadeInUp>
       </div>
     </section>

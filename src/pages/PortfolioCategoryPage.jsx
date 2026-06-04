@@ -5,6 +5,7 @@ import { useCategories, usePortfolioAll } from '../hooks/usePublicData'
 import PortfolioCategorySlider from '../components/sections/PortfolioCategorySlider'
 import { getCardCaption } from '../utils/cardOverlay'
 import TitleWithHeartDivider from '../components/ui/TitleWithHeartDivider'
+import TitleWithAmpersand from '../components/ui/TitleWithAmpersand'
 import {
   buildPortfolioCategories,
   getCategoryPhotoCollection,
@@ -87,6 +88,7 @@ export default function PortfolioCategoryPage() {
     [selectedPhoto],
   )
   const usePhasedWeddingGallery = Boolean(photoId && isWeddingCategory && galleryPhaseSections.length)
+  const activeTitle = photoId ? selectedPhoto?.title : activeWeddingTypeMeta?.title || activePubertyTypeMeta?.title || category.title
 
   const openLightbox = (galleryItems, index) => {
     setLightboxPhotos(galleryItems)
@@ -159,7 +161,9 @@ export default function PortfolioCategoryPage() {
           >
             Back
           </button>
-          <p className="font-times-italic text-[1.45rem] leading-none tracking-[-0.015em] text-[#2d211a]">{category.title}</p>
+          <p className="font-heading text-[1.45rem] leading-none tracking-[-0.015em] text-[#2d211a]">
+            <TitleWithAmpersand title={category.title} />
+          </p>
           <button
             type="button"
             onClick={() => navigate('/#portfolio')}
@@ -180,10 +184,10 @@ export default function PortfolioCategoryPage() {
           <p className="font-body text-xs uppercase tracking-[0.34em] text-[#b8945b]">
             {photoId ? 'Gallery Story' : 'Curated Collection'}
           </p>
-          <h1 className="mt-3 font-times-italic text-[2.45rem] leading-[0.98] tracking-[-0.025em] text-[#2d211a] sm:text-[3.8rem]">
-            {photoId ? selectedPhoto.title : activeWeddingTypeMeta?.title || activePubertyTypeMeta?.title || category.title}
+          <h1 className="mt-3 font-heading text-[2.45rem] leading-[0.98] tracking-[-0.025em] text-[#2d211a] sm:text-[3.8rem]">
+            <TitleWithAmpersand title={activeTitle} />
           </h1>
-          <p className="mt-4 max-w-3xl font-cormorant-medium text-[1.26rem] leading-8 tracking-[0.018em] text-[#7f7265] sm:text-[1.36rem]">
+          <p className="mt-4 max-w-3xl font-source-serif text-[1.26rem] leading-8 tracking-[0.01em] text-[#7f7265] sm:text-[1.36rem]">
             {photoId
               ? (selectedPhoto.description?.trim() || 'Explore the full gallery for this main portfolio story.')
               : activeWeddingTypeMeta?.subtitle || activePubertyTypeMeta?.subtitle || category.subtitle}
@@ -222,8 +226,10 @@ export default function PortfolioCategoryPage() {
                       className="rounded-[34px] border border-[#d9c7a6] bg-[#fffaf2] p-8 shadow-[0_24px_80px_rgba(71,52,31,0.08)]"
                     >
                       <p className="font-body text-xs uppercase tracking-[0.34em] text-[#b8945b]">Wedding Collection</p>
-                      <h3 className="mt-3 font-times-italic text-[2.1rem] leading-[0.95] tracking-[-0.02em] text-[#2d211a] sm:text-[2.85rem]">{section.title}</h3>
-                      <p className="mt-3 max-w-xl font-cormorant-medium text-[1.18rem] leading-7 tracking-[0.018em] text-[#7f7265] sm:text-[1.24rem]">{section.subtitle}</p>
+                      <h3 className="mt-3 font-heading text-[2.1rem] leading-[0.95] tracking-[-0.02em] text-[#2d211a] sm:text-[2.85rem]">
+                        <TitleWithAmpersand title={section.title} />
+                      </h3>
+                      <p className="mt-3 max-w-xl font-source-serif text-[1.18rem] leading-7 tracking-[0.01em] text-[#7f7265] sm:text-[1.24rem]">{section.subtitle}</p>
                       <div className="mt-6 rounded-[24px] border border-dashed border-[#d9c7a6] bg-white/70 px-6 py-10 text-center">
                         <p className="font-body text-sm uppercase tracking-[0.18em] text-[#745d47]">No photos added yet for this section.</p>
                       </div>
@@ -234,7 +240,7 @@ export default function PortfolioCategoryPage() {
             ) : (
               <div className="rounded-[28px] border border-[#ddceb2] bg-white px-8 py-14 text-center shadow-[0_22px_55px_rgba(75,55,31,0.09)]">
                 <p className="font-heading text-3xl text-[#2d211a]">No Photos Yet</p>
-              <p className="mt-4 font-cormorant-medium text-[1.18rem] leading-8 tracking-[0.018em] text-[#7f7265]">This active collection does not have any portfolio photos yet.</p>
+              <p className="mt-4 font-source-serif text-[1.18rem] leading-8 tracking-[0.01em] text-[#7f7265]">This active collection does not have any portfolio photos yet.</p>
               </div>
             )
           ) : isPubertyCategory && !activeType ? (
@@ -268,8 +274,10 @@ export default function PortfolioCategoryPage() {
                       className="rounded-[34px] border border-[#d9c7a6] bg-[#fffaf2] p-8 shadow-[0_24px_80px_rgba(71,52,31,0.08)]"
                     >
                       <p className="font-body text-xs uppercase tracking-[0.34em] text-[#b8945b]">Puberty Ceremony</p>
-                      <h3 className="mt-3 font-times-italic text-[2.1rem] leading-[0.95] tracking-[-0.02em] text-[#2d211a] sm:text-[2.85rem]">{section.title}</h3>
-                      <p className="mt-3 max-w-xl font-cormorant-medium text-[1.18rem] leading-7 tracking-[0.018em] text-[#7f7265] sm:text-[1.24rem]">{section.subtitle}</p>
+                      <h3 className="mt-3 font-heading text-[2.1rem] leading-[0.95] tracking-[-0.02em] text-[#2d211a] sm:text-[2.85rem]">
+                        <TitleWithAmpersand title={section.title} />
+                      </h3>
+                      <p className="mt-3 max-w-xl font-source-serif text-[1.18rem] leading-7 tracking-[0.01em] text-[#7f7265] sm:text-[1.24rem]">{section.subtitle}</p>
                       <div className="mt-6 rounded-[24px] border border-dashed border-[#d9c7a6] bg-white/70 px-6 py-10 text-center">
                         <p className="font-body text-sm uppercase tracking-[0.18em] text-[#745d47]">No photos added yet for this section.</p>
                       </div>
@@ -280,7 +288,7 @@ export default function PortfolioCategoryPage() {
             ) : (
               <div className="rounded-[28px] border border-[#ddceb2] bg-white px-8 py-14 text-center shadow-[0_22px_55px_rgba(75,55,31,0.09)]">
                 <p className="font-heading text-3xl text-[#2d211a]">No Photos Yet</p>
-                <p className="mt-4 font-cormorant-medium text-[1.18rem] leading-8 tracking-[0.018em] text-[#7f7265]">This active collection does not have any portfolio photos yet.</p>
+                <p className="mt-4 font-source-serif text-[1.18rem] leading-8 tracking-[0.01em] text-[#7f7265]">This active collection does not have any portfolio photos yet.</p>
               </div>
             )
           ) : visiblePhotos.length ? (
@@ -332,7 +340,7 @@ export default function PortfolioCategoryPage() {
           ) : (
             <div className="rounded-[28px] border border-[#ddceb2] bg-white px-8 py-14 text-center shadow-[0_22px_55px_rgba(75,55,31,0.09)]">
               <p className="font-heading text-3xl text-[#2d211a]">No Photos Yet</p>
-              <p className="mt-4 font-cormorant-medium text-[1.18rem] leading-8 tracking-[0.018em] text-[#7f7265]">
+              <p className="mt-4 font-source-serif text-[1.18rem] leading-8 tracking-[0.01em] text-[#7f7265]">
                 {activeWeddingTypeMeta
                   ? `This ${activeWeddingTypeMeta.title.toLowerCase()} collection does not have any photos yet.`
                   : 'This active collection does not have any portfolio photos yet.'}
@@ -358,7 +366,9 @@ export default function PortfolioCategoryPage() {
                 >
                   <div className="mb-6">
                     <p className="font-body text-xs uppercase tracking-[0.28em] text-[#b8945b]">Wedding Story</p>
-                    <h2 className="mt-3 font-times-italic text-[2rem] leading-[0.95] tracking-[-0.02em] text-[#2d211a] sm:text-[2.65rem]">{section.title}</h2>
+                    <h2 className="mt-3 font-heading text-[2rem] leading-[0.95] tracking-[-0.02em] text-[#2d211a] sm:text-[2.65rem]">
+                      <TitleWithAmpersand title={section.title} />
+                    </h2>
                   </div>
 
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">

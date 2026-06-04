@@ -79,10 +79,10 @@ export default function Packages() {
     <section id="packages" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <FadeInUp>
-          <h2 className="font-times-italic text-center text-[2.5rem] leading-[0.98] tracking-[-0.02em] text-text sm:text-[3.25rem]">
+          <h2 className="font-heading text-center text-[2.5rem] leading-[0.98] tracking-[-0.02em] text-text sm:text-[3.25rem]">
             Packages
           </h2>
-          <p className="mb-10 text-center font-cormorant-medium text-[1.26rem] leading-8 tracking-[0.018em] text-[#72665b] sm:text-[1.34rem]">
+          <p className="mb-10 text-center font-source-serif text-[1.26rem] leading-8 tracking-[0.01em] text-[#72665b] sm:text-[1.34rem]">
             Choose the package that fits your celebration best
           </p>
         </FadeInUp>
@@ -171,8 +171,8 @@ export default function Packages() {
         ) : (
           <FadeInUp delay={0.1}>
             <div className="rounded-3xl border border-sand bg-beige/60 px-6 py-12 text-center">
-              <p className="font-times-italic text-2xl leading-none tracking-[-0.02em] text-text">Packages Coming Soon</p>
-              <p className="font-cormorant-medium mt-2 text-[1.18rem] leading-7 text-[#72665b] sm:text-[1.24rem]">Add package cards from the admin panel to show them here.</p>
+              <p className="font-heading text-2xl leading-none tracking-[-0.02em] text-text">Packages Coming Soon</p>
+              <p className="font-source-serif mt-2 text-[1.18rem] leading-7 text-[#72665b] sm:text-[1.24rem]">Add package cards from the admin panel to show them here.</p>
             </div>
           </FadeInUp>
         )}

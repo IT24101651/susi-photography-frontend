@@ -361,10 +361,10 @@ export default function Contact() {
                   <p className="font-editorial text-[0.78rem] font-semibold uppercase tracking-[0.36em] text-[#6f5743] [font-variant:small-caps]">
                     Stay Connected
                   </p>
-                  <h3 className="mt-3 font-times-italic text-[2rem] leading-[1.02] tracking-[-0.02em] text-text">
+                  <h3 className="mt-3 font-heading text-[2rem] leading-[1.02] tracking-[-0.02em] text-text">
                     Follow our work and find us easily.
                   </h3>
-                  <p className="mt-3 max-w-md font-cormorant-medium text-[1.18rem] leading-7 tracking-[0.018em] text-[#72665b] sm:text-[1.24rem]">
+                  <p className="mt-3 max-w-md font-source-serif text-[1.18rem] leading-7 tracking-[0.01em] text-[#72665b] sm:text-[1.24rem]">
                     Your address, phone, and email now live in the footer bar below for a cleaner contact section.
                   </p>
                 </div>
@@ -387,10 +387,10 @@ export default function Contact() {
 
           <div>
             <FadeInUp>
-              <h2 className="mb-2 text-center font-times-italic text-[2.5rem] leading-[0.98] tracking-[-0.02em] text-text lg:text-left">
+              <h2 className="mb-2 text-center font-heading text-[2.5rem] leading-[0.98] tracking-[-0.02em] text-text lg:text-left">
                 Get in Touch
               </h2>
-              <p className="mb-12 text-center font-cormorant-medium text-[1.18rem] leading-8 tracking-[0.018em] text-[#72665b] lg:text-left sm:text-[1.24rem]">
+              <p className="mb-12 text-center font-source-serif text-[1.18rem] leading-8 tracking-[0.01em] text-[#72665b] lg:text-left sm:text-[1.24rem]">
                 We'd love to hear about your story
               </p>
             </FadeInUp>

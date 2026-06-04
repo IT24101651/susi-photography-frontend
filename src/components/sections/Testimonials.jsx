@@ -114,7 +114,7 @@ function TestimonialCard({ item, index }) {
           ))}
         </div>
 
-        <p className="mt-6 flex-1 font-cormorant-medium text-[1.18rem] leading-8 tracking-[0.01em] text-[#4f4f4f] sm:text-[1.26rem] sm:leading-9">
+        <p className="mt-6 flex-1 font-source-serif text-[1.18rem] leading-8 tracking-[0.01em] text-[#4f4f4f] sm:text-[1.26rem] sm:leading-9">
           {item.quote}
         </p>
       </div>
@@ -136,10 +136,10 @@ export function TestimonialsSection() {
           <p className="font-editorial text-[0.78rem] font-semibold uppercase tracking-[0.36em] text-[#6f5743] [font-variant:small-caps] sm:text-[0.82rem]">
             Client Testimonials
           </p>
-          <h2 className="mx-auto mt-5 max-w-4xl font-times-italic text-[2.35rem] leading-[0.98] tracking-[-0.02em] text-[#161616] sm:text-[3.75rem]">
+          <h2 className="mx-auto mt-5 max-w-4xl font-heading text-[2.35rem] leading-[0.98] tracking-[-0.02em] text-[#161616] sm:text-[3.75rem]">
             What Our Clients Say
           </h2>
-          <p className="mx-auto mt-5 max-w-3xl font-cormorant-medium text-[1.26rem] leading-8 tracking-[0.018em] text-[#72665b] sm:text-[1.34rem] sm:leading-9">
+          <p className="mx-auto mt-5 max-w-3xl font-source-serif text-[1.26rem] leading-8 tracking-[0.01em] text-[#72665b] sm:text-[1.34rem] sm:leading-9">
             Real moments. Real memories. Real feedback from our happy clients.
           </p>
         </FadeInUp>

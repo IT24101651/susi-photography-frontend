@@ -19,7 +19,7 @@ export default function BrandLogo({
           className={`${compact ? 'h-11 w-11 sm:h-12 sm:w-12' : 'h-12 w-12'} object-contain flex-shrink-0 ${imageClassName}`}
         />
       ) : null}
-      <span className={`${textCls} font-heading uppercase tracking-[0.22em] sm:tracking-[0.34em] ${compact ? 'text-[11px] sm:text-sm' : 'text-lg'} ${hideNameOnMobile ? 'hidden sm:inline' : ''}`}>
+      <span className={`${textCls} font-wordmark uppercase tracking-[0.22em] sm:tracking-[0.34em] ${compact ? 'text-[11px] sm:text-sm' : 'text-lg'} ${hideNameOnMobile ? 'hidden sm:inline' : ''}`}>
         {name}
       </span>
     </span>

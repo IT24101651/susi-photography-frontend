@@ -77,7 +77,7 @@ function TeamCard({ member }) {
             </p>
           ) : null}
           {member.bio ? (
-            <p className="mt-4 max-h-[5.3rem] overflow-hidden font-cormorant-medium text-[1.1rem] leading-7 tracking-[0.018em] text-[#e5ddd1]">
+            <p className="mt-4 max-h-[5.3rem] overflow-hidden font-source-serif text-[1.1rem] leading-7 tracking-[0.01em] text-[#e5ddd1]">
               {member.bio}
             </p>
           ) : null}
@@ -123,11 +123,11 @@ export default function Team() {
           <p className="font-editorial text-[0.78rem] font-semibold uppercase tracking-[0.36em] text-[#6f5743] [font-variant:small-caps] sm:text-[0.82rem]">
             Creative Professionals
           </p>
-          <h2 className="mt-4 font-times-italic text-[2.15rem] leading-[0.98] tracking-[-0.02em] text-[#1f1814] sm:mt-5 sm:text-[3.4rem]">
+          <h2 className="mt-4 font-heading text-[2.15rem] leading-[0.98] tracking-[-0.02em] text-[#1f1814] sm:mt-5 sm:text-[3.4rem]">
             Proprietors
           </h2>
           <div className="mx-auto mt-4 h-px w-12 bg-[#b49a7c]/55 sm:mt-5 sm:w-16" />
-          <p className="mx-auto mt-5 max-w-[18rem] font-cormorant-medium text-[1.26rem] leading-8 tracking-[0.018em] text-[#72665b] sm:mt-6 sm:max-w-2xl sm:text-[1.34rem] sm:leading-9">
+          <p className="mx-auto mt-5 max-w-[18rem] font-source-serif text-[1.26rem] leading-8 tracking-[0.01em] text-[#72665b] sm:mt-6 sm:max-w-2xl sm:text-[1.34rem] sm:leading-9">
             <span className="sm:hidden">A studio ensemble shaped by fashion portraiture, cinematic direction, and quiet luxury detail.</span>
             <span className="hidden sm:inline">A studio ensemble shaped by fashion portraiture, cinematic direction, and quiet luxury detail.</span>
           </p>
