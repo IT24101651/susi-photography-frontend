@@ -98,59 +98,24 @@ export default function AdminPortfolio() {
     setGalleryUploadPhase('')
   }
 
-  const uploadGalleryImages = async ({ parentId, title, category, description, wedding_type, startingOrder = 0, uploads = [] }) => {
-    if (!uploads.length) return
+  const buildSubmissionPayload = (data) => ({
+    ...data,
+    removed_gallery_image_ids: removedGalleryImageIds,
+    gallery_uploads: galleryUploads.map((upload) => upload.file),
+    gallery_upload_shoot_phases: galleryUploads.map((upload) => upload.shootPhase || ''),
+  })
 
-    await Promise.all(
-      uploads.map((upload, index) => adminCreatePortfolio(toFormData({
-        parent: parentId,
-        category,
-        wedding_type,
-        shoot_phase: upload.shootPhase,
-        title: `${title} Gallery ${startingOrder + index + 1}`,
-        image: upload.file,
-        description,
-        order: startingOrder + index + 1,
-      }))),
-    )
-  }
+  const shouldClearGalleryUploads = () => galleryUploads.length > 0 || removedGalleryImageIds.length > 0
 
   const createMut = useMutation({
-    mutationFn: async (data) => {
-      const created = await adminCreatePortfolio(toFormData(data))
-
-      await uploadGalleryImages({
-        parentId: created.id,
-        title: data.title,
-        category: data.category,
-        description: data.description,
-        wedding_type: data.wedding_type,
-        uploads: galleryUploads,
-      })
-
-      return created
-    },
-    onSuccess: () => { toast.success('Photo added'); invalidate(); resetGalleryUploads(); setModal(null) },
+    mutationFn: async (data) => adminCreatePortfolio(toFormData(buildSubmissionPayload(data))),
+    onSuccess: () => { toast.success('Photo added'); invalidate(); if (shouldClearGalleryUploads()) resetGalleryUploads(); setModal(null) },
     onError: (error) => toast.error(getApiErrorMessage(error, 'Failed to add photo')),
   })
 
   const updateMut = useMutation({
-    mutationFn: async ({ id, data, existingGalleryCount }) => {
-      const updated = await adminUpdatePortfolio(id, toFormData(data))
-
-      await uploadGalleryImages({
-        parentId: id,
-        title: data.title,
-        category: data.category,
-        description: data.description,
-        wedding_type: data.wedding_type,
-        startingOrder: existingGalleryCount,
-        uploads: galleryUploads,
-      })
-
-      return updated
-    },
-    onSuccess: () => { toast.success('Photo updated'); invalidate(); resetGalleryUploads(); setModal(null) },
+    mutationFn: async ({ id, data }) => adminUpdatePortfolio(id, toFormData(buildSubmissionPayload(data))),
+    onSuccess: () => { toast.success('Photo updated'); invalidate(); if (shouldClearGalleryUploads()) resetGalleryUploads(); setModal(null) },
     onError: (error) => toast.error(getApiErrorMessage(error, 'Failed to update photo')),
   })
 
@@ -186,17 +151,11 @@ export default function AdminPortfolio() {
   }
 
   const onSubmit = (data) => {
-    const payload = {
-      ...data,
-      removed_gallery_image_ids: removedGalleryImageIds,
-    }
-
     return modal.mode === 'add'
-      ? createMut.mutate(payload)
+      ? createMut.mutate(data)
     : updateMut.mutate({
       id: modal.data.id,
-      data: payload,
-      existingGalleryCount: (modal.data.gallery_images ?? []).filter((image) => !removedGalleryImageIds.includes(image.id)).length,
+      data,
     })
   }
 
