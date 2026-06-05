@@ -8,6 +8,9 @@ export default function TitleWithAmpersand({
   if (!cleanTitle) return null
 
   const parts = cleanTitle.split('&')
+  const resolvedAmpersandClassName =
+    ampersandClassName ||
+    'ml-[0.01em] mr-[0.14em] inline-flex items-center justify-center font-luxury-italic text-[0.88em] font-normal leading-none tracking-[-0.08em] translate-y-[-0.02em] scale-x-[0.97] opacity-90'
 
   if (parts.length < 2) {
     return <span className={className}>{cleanTitle}</span>
@@ -21,7 +24,8 @@ export default function TitleWithAmpersand({
       <span className={textClassName}>{left}</span>
       <span
         aria-hidden="true"
-        className={`mx-[0.08em] inline-flex items-center justify-center font-luxury-italic leading-none tracking-[-0.06em] ${ampersandClassName}`}
+        className={resolvedAmpersandClassName}
+        style={{ fontWeight: 400 }}
       >
         &amp;
       </span>

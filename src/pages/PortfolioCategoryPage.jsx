@@ -79,6 +79,7 @@ export default function PortfolioCategoryPage() {
     : []
   const activeWeddingTypeMeta = WEDDING_TYPE_CONFIGS.find((section) => section.value === activeType) ?? null
   const activePubertyTypeMeta = PUBERTY_TYPE_CONFIGS.find((section) => section.value === activeType) ?? null
+  const isHyphenTitleCategory = category?.slug === 'wedding' || category?.slug === 'engagement'
   const cardOverlayCtaClass =
     'inline-flex items-center gap-3 self-start rounded-none border-t border-white/22 pt-3 font-ui text-[0.8rem] font-medium uppercase tracking-[0.4em] text-[#d7d3cf] drop-shadow-[0_2px_10px_rgba(0,0,0,0.48)] sm:text-[0.86rem]'
   const sectionToggleClass =
@@ -88,7 +89,12 @@ export default function PortfolioCategoryPage() {
     [selectedPhoto],
   )
   const usePhasedWeddingGallery = Boolean(photoId && isWeddingCategory && galleryPhaseSections.length)
-  const activeTitle = photoId ? selectedPhoto?.title : activeWeddingTypeMeta?.title || activePubertyTypeMeta?.title || category.title
+  const activeTitle = photoId
+    ? selectedPhoto?.title
+    : activeWeddingTypeMeta?.title || activePubertyTypeMeta?.title || category.title
+  const displayActiveTitle = photoId && isHyphenTitleCategory && activeTitle
+    ? String(activeTitle).replace(/\s*&\s*/g, '-')
+    : activeTitle
 
   const openLightbox = (galleryItems, index) => {
     setLightboxPhotos(galleryItems)
@@ -146,7 +152,7 @@ export default function PortfolioCategoryPage() {
 
   return (
     <div className="min-h-screen bg-[#f7f0e6]">
-      <div className="sticky top-0 z-20 border-b border-[#eadfcf] bg-[#fffaf2]/90 backdrop-blur-md">
+      <div className="sticky top-0 z-20 border-b border-[#d8c4a4] bg-[rgba(234,220,199,0.98)] shadow-[0_12px_34px_rgba(77,58,32,0.08)] backdrop-blur-md">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
           <button
             type="button"
@@ -185,7 +191,7 @@ export default function PortfolioCategoryPage() {
             {photoId ? 'Gallery Story' : 'Curated Collection'}
           </p>
           <h1 className="mt-3 font-heading text-[2.45rem] leading-[0.98] tracking-[-0.025em] text-[#2d211a] sm:text-[3.8rem]">
-            <TitleWithAmpersand title={activeTitle} />
+            {displayActiveTitle}
           </h1>
           <p className="mt-4 max-w-3xl font-source-serif text-[1.26rem] leading-8 tracking-[0.01em] text-[#7f7265] sm:text-[1.36rem]">
             {photoId
