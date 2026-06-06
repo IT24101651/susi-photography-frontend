@@ -10,9 +10,10 @@ const ArrowIcon = () => (
 )
 
 const CalendarIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
     <rect x="3" y="4" width="18" height="18" rx="2.5" />
-    <path d="M16 2v4M8 2v4M3 10h18" />
+    <path d="M8 2v4M16 2v4" />
+    <path d="M3 9h18" />
   </svg>
 )
 
@@ -39,8 +40,9 @@ const HeartIcon = () => (
 )
 
 export default function Hero() {
-  const { data: slides } = useSlides()
+  const { data: slides, isLoading: slidesLoading } = useSlides()
   const { data: settings } = useSettings()
+  const fallbackHeroImage = '/hero/10.jpg'
   const items = slides ?? []
   const slideSources = items.map((item) => `${item.id}:${item.image ?? ''}`).join('|')
   const hasSlides = items.length > 0
@@ -108,12 +110,20 @@ export default function Hero() {
   const capturedMomentsCount = Number.isFinite(Number(settings?.captured_moments_count))
     ? Number(settings.captured_moments_count)
     : 1000
-  const luxurySubtitle = hasSlides && activeSlide?.subtitle
-    ? activeSlide.subtitle
-    : 'Wedding photography that preserves the real, the raw, and the remarkable moments.'
+  const luxurySubtitle = !slidesLoading && activeSlide?.subtitle ? activeSlide.subtitle : ''
 
   return (
-    <section id="hero" className="relative min-h-[74svh] overflow-hidden sm:min-h-[100svh]">
+    <section id="hero" className="relative min-h-[100svh] overflow-hidden">
+      <img
+        src={fallbackHeroImage}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover object-[66%_center] sm:object-center"
+        loading="eager"
+        fetchPriority="high"
+        decoding="async"
+      />
+
       {hasSlides ? (
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -140,12 +150,12 @@ export default function Hero() {
       <div className="absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(10,8,6,0.48)_0%,rgba(24,16,11,0.22)_28%,rgba(26,18,12,0.34)_100%)]" />
       <div className="absolute inset-x-4 top-[5.2rem] z-[3] h-px bg-[linear-gradient(90deg,rgba(190,147,86,0.68)_0%,rgba(190,147,86,0.4)_45%,rgba(190,147,86,0.12)_100%)] sm:inset-x-6 sm:top-[5.85rem] lg:inset-x-10 lg:top-[6.45rem]" />
 
-      <div className="absolute inset-0 z-10 flex items-start px-4 pb-5 pt-[6.8rem] text-white sm:px-6 sm:pb-12 sm:pt-[9.9rem] lg:items-center lg:px-10 lg:pb-14 lg:pt-0">
+      <div className="absolute inset-0 z-10 flex items-start px-4 pb-5 pt-[5.35rem] text-white sm:items-start sm:px-6 sm:pb-12 sm:pt-[9.9rem] lg:items-center lg:px-10 lg:pb-14 lg:pt-0">
         <div className="w-full">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={`content-${activeIndex}`}
-              className="flex max-w-[15.8rem] flex-col items-start text-left sm:max-w-[22rem] md:max-w-[26rem] lg:mt-20 lg:max-w-[33rem]"
+              className="flex max-w-[18rem] flex-col items-start text-left sm:max-w-[22rem] md:max-w-[26rem] lg:mt-20 lg:max-w-[33rem]"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
@@ -153,62 +163,69 @@ export default function Hero() {
               style={{ willChange: 'opacity, transform' }}
             >
               <h1
-                className="mb-4 font-heading text-[2.12rem] leading-[0.92] tracking-[-0.035em] text-[#f9f3eb] sm:mb-5 sm:text-[3.1rem] md:text-[3.9rem] lg:text-[4.9rem]"
+                className="mb-4 font-heading text-[2.72rem] leading-[0.88] tracking-[-0.05em] text-[#f9f3eb] sm:mb-5 sm:text-[3.1rem] md:text-[3.9rem] lg:text-[4.9rem]"
                 style={{ textShadow: '0 18px 38px rgba(5, 3, 2, 0.42)' }}
               >
                 <span className="block">Capturing</span>
                 <span className="block text-[#d2aa67]">every moment</span>
-                <span className="block">of your beautiful life</span>
+                <span className="block">of your beautiful</span>
+                <span className="block">life</span>
               </h1>
 
               <div className="mb-4 h-px w-10 bg-[#c39a59] sm:mb-6 sm:w-16 lg:w-20" />
 
-              <p className="max-w-[14.75rem] font-editorial text-[1.05rem] leading-7 text-[#f3ebe0]/88 sm:max-w-[21rem] sm:text-[1.35rem] sm:leading-9 md:max-w-[24rem] md:text-[1.42rem] lg:max-w-[28rem] lg:text-[1.55rem] lg:leading-10">
+              <p className="min-h-[4.5rem] max-w-[17rem] font-editorial text-[1.1rem] leading-7 text-[#f3ebe0]/88 text-balance sm:min-h-[5.5rem] sm:max-w-[21rem] sm:text-[1.35rem] sm:leading-9 md:max-w-[24rem] md:text-[1.42rem] lg:max-w-[28rem] lg:text-[1.55rem] lg:leading-10">
                 {luxurySubtitle}
               </p>
 
-              <div className="mt-5 flex w-full max-w-[16rem] flex-col items-stretch gap-3 sm:mt-8 sm:max-w-[22rem] md:max-w-[24rem] lg:mt-10 lg:max-w-none lg:flex-row lg:items-center lg:gap-4">
+              <div className="mt-5 flex w-full max-w-[18rem] flex-col items-stretch gap-3 sm:mt-8 sm:max-w-[22rem] md:max-w-[24rem] lg:mt-10 lg:max-w-none lg:flex-row lg:items-center lg:gap-4">
                 <a
                   href="#portfolio"
-                  className="inline-flex min-w-0 items-center justify-center gap-3 rounded-md bg-[#d2aa67] px-5 py-3 font-ui text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[#26180f] shadow-[0_16px_32px_rgba(164,123,58,0.24)] transition-colors hover:bg-[#debc82] sm:px-6 sm:py-3.5 sm:text-sm lg:min-w-[14.5rem] lg:py-4"
+                  className="inline-flex min-w-0 items-center justify-center gap-3 rounded-md bg-[#d2aa67] px-5 py-3.5 font-ui text-[0.88rem] font-semibold uppercase tracking-[0.16em] text-[#26180f] shadow-[0_16px_32px_rgba(164,123,58,0.24)] transition-colors hover:bg-[#debc82] sm:px-6 sm:py-3.5 sm:text-sm lg:min-w-[14.5rem] lg:py-4"
                 >
                   View Portfolio
                   <span aria-hidden="true"><ArrowIcon /></span>
                 </a>
                 <a
                   href="#contact"
-                  className="inline-flex min-w-0 items-center justify-center gap-3 rounded-md border border-[#9f7845] bg-[#1a110c]/34 px-5 py-3 font-ui text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-[#f7eddc] backdrop-blur-sm transition-colors hover:bg-[#24160d]/42 sm:px-6 sm:py-3.5 sm:text-sm lg:min-w-[14.5rem] lg:py-4"
+                  className="inline-flex min-w-0 items-center justify-center gap-2 rounded-md border border-[#9f7845] bg-[#1a110c]/34 px-5 py-3.5 font-ui text-[0.88rem] font-semibold uppercase tracking-[0.16em] text-[#f7eddc] backdrop-blur-sm transition-colors hover:bg-[#24160d]/42 sm:px-6 sm:py-3.5 sm:text-sm lg:min-w-[14.5rem] lg:py-4"
                 >
-                  Book a Session
-                  <span aria-hidden="true"><CalendarIcon /></span>
+                  <span className="whitespace-nowrap">Book a Session</span>
+                  <span className="inline-flex shrink-0 items-center justify-center" aria-hidden="true">
+                    <CalendarIcon />
+                  </span>
                 </a>
               </div>
 
-              <div className="mt-6 grid w-full max-w-[16rem] grid-cols-2 gap-x-4 gap-y-4 text-[#efdfc6] sm:max-w-[22rem] sm:grid-cols-1 md:max-w-[24rem] lg:mt-10 lg:max-w-none lg:grid-cols-[auto_1px_auto_1px_auto] lg:items-start lg:gap-5">
-                <div className="flex min-w-0 items-start gap-2 sm:gap-3">
+              <div className="mt-6 grid w-full max-w-[18rem] grid-cols-1 gap-x-4 gap-y-3 text-[#efdfc6] sm:max-w-[22rem] sm:grid-cols-1 md:max-w-[24rem] lg:mt-10 lg:max-w-none lg:grid-cols-[auto_1px_auto_1px_auto] lg:items-start lg:gap-5">
+                <div className="flex min-w-0 items-center gap-2 sm:items-start sm:gap-3">
                   <span className="mt-0.5 scale-90 text-[#d2aa67] sm:scale-100"><PeopleIcon /></span>
                   <div>
-                    <p className="font-body text-base font-semibold leading-none sm:text-lg">{capturedMomentsCount}+</p>
-                    <p className="font-body text-[0.78rem] leading-tight text-[#cbb79a] sm:text-sm">Captured Moments</p>
+                    <p className="font-body text-[1.08rem] font-semibold leading-none sm:text-lg">{capturedMomentsCount}+</p>
+                    <p className="font-body text-[0.86rem] leading-tight text-[#cbb79a] sm:text-sm">Captured Moments</p>
                   </div>
                 </div>
+                <div className="col-span-full h-px w-full max-w-[7rem] bg-[linear-gradient(90deg,rgba(195,154,89,0.88)_0%,rgba(195,154,89,0.42)_70%,rgba(195,154,89,0.08)_100%)] sm:hidden" />
                 <div className="hidden h-10 w-px self-center bg-[#89663d]/55 lg:block" />
-                <div className="flex min-w-0 items-start gap-2 sm:gap-3">
+                <div className="flex min-w-0 items-center gap-2 sm:items-start sm:gap-3">
                   <span className="mt-0.5 scale-90 text-[#d2aa67] sm:scale-100"><CameraIcon /></span>
                   <div>
-                    <p className="font-body text-base font-semibold leading-none sm:text-lg">Cinematic</p>
-                    <p className="font-body text-[0.78rem] leading-tight text-[#cbb79a] sm:text-sm">Storytelling</p>
+                    <p className="font-body text-[1.08rem] font-semibold leading-none sm:text-lg">Cinematic</p>
+                    <p className="font-body text-[0.86rem] leading-tight text-[#cbb79a] sm:text-sm">Storytelling</p>
                   </div>
                 </div>
+                <div className="col-span-full h-px w-full max-w-[7rem] bg-[linear-gradient(90deg,rgba(195,154,89,0.88)_0%,rgba(195,154,89,0.42)_70%,rgba(195,154,89,0.08)_100%)] sm:hidden" />
                 <div className="hidden h-10 w-px self-center bg-[#89663d]/55 lg:block" />
-                <div className="col-span-2 flex min-w-0 items-start gap-2 sm:col-span-1 sm:gap-3">
+                <div className="col-span-1 flex min-w-0 items-center gap-2 sm:items-start sm:gap-3 lg:col-span-1">
                   <span className="mt-0.5 scale-90 text-[#d2aa67] sm:scale-100"><HeartIcon /></span>
                   <div>
-                    <p className="font-body text-base font-semibold leading-none sm:text-lg">Since 2009</p>
-                    <p className="font-body text-[0.78rem] leading-tight text-[#cbb79a] sm:text-sm">Capturing Emotions</p>
+                    <p className="font-body text-[1.08rem] font-semibold leading-none sm:text-lg">Since 2009</p>
+                    <p className="font-body text-[0.86rem] leading-tight text-[#cbb79a] sm:text-sm">Capturing Emotions</p>
                   </div>
                 </div>
               </div>
+
+              <div className="mt-6 h-px w-full max-w-[7rem] bg-[linear-gradient(90deg,rgba(195,154,89,0.88)_0%,rgba(195,154,89,0.42)_70%,rgba(195,154,89,0.08)_100%)] sm:hidden" />
             </motion.div>
           </AnimatePresence>
         </div>
