@@ -155,7 +155,7 @@ export default function Hero() {
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={`content-${activeIndex}`}
-              className="flex max-w-[18rem] flex-col items-start text-left sm:max-w-[22rem] md:max-w-[26rem] lg:mt-20 lg:max-w-[33rem]"
+              className="flex max-w-[18rem] flex-col items-start text-left sm:max-w-[22rem] md:max-w-[26rem] lg:mt-32 lg:max-w-[33rem]"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
