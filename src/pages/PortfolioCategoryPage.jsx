@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useCategories, usePortfolioAll } from '../hooks/usePublicData'
@@ -25,7 +25,6 @@ export default function PortfolioCategoryPage() {
   const { data: allPhotos = [] } = usePortfolioAll()
   const [lightboxIndex, setLightboxIndex] = useState(null)
   const [lightboxPhotos, setLightboxPhotos] = useState([])
-  const [expandedPhaseSections, setExpandedPhaseSections] = useState({})
   const categories = useMemo(() => buildPortfolioCategories(apiCategories), [apiCategories])
   const category = useMemo(
     () => categories.find((item) => item.slug === categorySlug) ?? null,
@@ -46,6 +45,22 @@ export default function PortfolioCategoryPage() {
   const pubertySections = useMemo(
     () => (isPubertyCategory ? groupPubertyPhotos(photos) : []),
     [isPubertyCategory, photos],
+  )
+  const pubertySectionOrder = useMemo(
+    () => new Map([
+      ['the_celebration', 0],
+      ['before_the_blessing', 1],
+      ['after_glow_portraits', 2],
+    ]),
+    [],
+  )
+  const pubertySectionsOrdered = useMemo(
+    () =>
+      [...pubertySections].sort(
+        (left, right) =>
+          (pubertySectionOrder.get(left.value) ?? 99) - (pubertySectionOrder.get(right.value) ?? 99),
+      ),
+    [pubertySectionOrder, pubertySections],
   )
   const activeWeddingSection = useMemo(
     () => weddingSections.find((section) => section.value === activeType) ?? null,
@@ -82,8 +97,6 @@ export default function PortfolioCategoryPage() {
   const isHyphenTitleCategory = category?.slug === 'wedding' || category?.slug === 'engagement'
   const cardOverlayCtaClass =
     'inline-flex items-center gap-3 self-start rounded-none border-t border-white/22 pt-3 font-ui text-[0.8rem] font-medium uppercase tracking-[0.4em] text-[#d7d3cf] drop-shadow-[0_2px_10px_rgba(0,0,0,0.48)] sm:text-[0.86rem]'
-  const sectionToggleClass =
-    'group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[#c9ab74] bg-gradient-to-r from-[#f6ead3] via-[#edd3a4] to-[#d8ae62] px-6 py-3 font-body text-sm uppercase tracking-[0.16em] text-[#3b2815] shadow-[0_18px_34px_rgba(184,148,91,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8945b] hover:from-[#f9eed9] hover:via-[#f0d8ab] hover:to-[#c99847] hover:shadow-[0_22px_38px_rgba(184,148,91,0.3)]'
   const galleryPhaseSections = useMemo(
     () => groupGalleryImagesByPhase(selectedPhoto?.gallery_images || []).filter((section) => section.images.length > 0),
     [selectedPhoto],
@@ -100,10 +113,6 @@ export default function PortfolioCategoryPage() {
     setLightboxPhotos(galleryItems)
     setLightboxIndex(index)
   }
-
-  useEffect(() => {
-    setExpandedPhaseSections({})
-  }, [photoId])
 
   if (isCategoriesLoading) {
     return (
@@ -218,9 +227,9 @@ export default function PortfolioCategoryPage() {
                         title={section.title}
                         subtitle={section.subtitle}
                         eyebrow="Wedding Collection"
-                        viewAllTo={`${category.route}?type=${section.value}`}
-                        detailSuffix={`?type=${section.value}`}
                         sliderKey={`wedding-${section.value}`}
+                        detailSuffix={`?type=${section.value}`}
+                        showAllCards
                       />
                     </motion.div>
                   ) : (
@@ -252,7 +261,7 @@ export default function PortfolioCategoryPage() {
           ) : isPubertyCategory && !activeType ? (
             photos.length ? (
               <div className="space-y-10">
-                {pubertySections.map((section, index) => (
+                {pubertySectionsOrdered.map((section, index) => (
                   section.photos.length ? (
                     <motion.div
                       key={section.value}
@@ -266,9 +275,9 @@ export default function PortfolioCategoryPage() {
                         title={section.title}
                         subtitle={section.subtitle}
                         eyebrow="Puberty Ceremony"
-                        viewAllTo={`${category.route}?type=${section.value}`}
                         detailSuffix={`?type=${section.value}`}
                         sliderKey={`puberty-${section.value}`}
+                        showAllCards
                       />
                     </motion.div>
                   ) : (
@@ -358,9 +367,7 @@ export default function PortfolioCategoryPage() {
         {photoId && usePhasedWeddingGallery && (
           <div className="mt-12 space-y-10">
             {galleryPhaseSections.map((section, sectionIndex) => {
-              const isExpanded = Boolean(expandedPhaseSections[section.value])
-              const previewImages = isExpanded ? section.images : section.images.slice(0, 3)
-              const hasMoreImages = section.images.length > 3
+              const previewImages = section.images
 
               return (
                 <motion.section
@@ -401,23 +408,6 @@ export default function PortfolioCategoryPage() {
                     ))}
                   </div>
 
-                  {hasMoreImages && (
-                    <div className="mt-6 flex justify-end">
-                      <button
-                        type="button"
-                        onClick={() => setExpandedPhaseSections((current) => ({
-                          ...current,
-                          [section.value]: !current[section.value],
-                        }))}
-                        className={sectionToggleClass}
-                      >
-                        {isExpanded ? 'Show Less' : 'View All'}
-                        <span aria-hidden="true" className="text-base leading-none transition-transform duration-300 group-hover:translate-x-1">
-                          &rarr;
-                        </span>
-                      </button>
-                    </div>
-                  )}
                 </motion.section>
               )
             })}
