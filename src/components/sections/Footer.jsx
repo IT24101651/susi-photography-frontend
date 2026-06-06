@@ -149,11 +149,14 @@ export default function Footer() {
             <div className="relative mt-5 w-full max-w-[260px]">
               <div className="absolute inset-[-12px] rounded-[28px] bg-[radial-gradient(circle_at_center,_rgba(232,194,120,0.40),_rgba(206,151,74,0.16)_42%,_transparent_74%)] blur-2xl" />
               <div className="relative overflow-hidden rounded-[22px] border border-[#7b5a3a]/35 bg-[#1a120d]">
-              <img
-                src="/Camara.png"
-                alt="Photography camera"
-                className="h-auto w-full object-cover"
-              />
+                <img
+                  src="/Camara.jpg"
+                  alt="Photography camera"
+                  loading="lazy"
+                  decoding="async"
+                  fetchPriority="low"
+                  className="h-auto w-full object-cover"
+                />
               </div>
             </div>
           </div>

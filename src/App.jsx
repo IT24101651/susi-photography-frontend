@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './components/admin/PrivateRoute'
 import AdminLayout from './components/admin/AdminLayout'
@@ -21,12 +21,41 @@ import AdminSettings from './pages/Admin/AdminSettings'
 import FloatingContactButtons from './components/ui/FloatingContactButtons'
 
 function ScrollToTop() {
-  const { pathname, hash } = useLocation()
+  const { pathname, search, hash } = useLocation()
 
   useEffect(() => {
-    if (hash) return
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-  }, [hash, pathname])
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+  }, [])
+
+  useLayoutEffect(() => {
+    const storageKey = `scroll-position:${pathname}${search}`
+
+    const restoreScroll = () => {
+      if (hash) {
+        const target = document.getElementById(hash.slice(1))
+        if (target) {
+          target.scrollIntoView({ block: 'start', behavior: 'auto' })
+          return
+        }
+      }
+
+      const savedPosition = Number(sessionStorage.getItem(storageKey))
+      window.scrollTo({
+        top: Number.isFinite(savedPosition) ? savedPosition : 0,
+        left: 0,
+        behavior: 'auto',
+      })
+    }
+
+    const frameId = window.requestAnimationFrame(restoreScroll)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      sessionStorage.setItem(storageKey, String(window.scrollY))
+    }
+  }, [hash, pathname, search])
 
   return null
 }
