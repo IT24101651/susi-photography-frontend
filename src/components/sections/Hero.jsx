@@ -9,14 +9,6 @@ const ArrowIcon = () => (
   </svg>
 )
 
-const CalendarIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-    <rect x="3" y="4" width="18" height="18" rx="2.5" />
-    <path d="M8 2v4M16 2v4" />
-    <path d="M3 9h18" />
-  </svg>
-)
-
 const PeopleIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2" />
@@ -50,16 +42,19 @@ export default function Hero() {
   const [displayedIndex, setDisplayedIndex] = useState(0)
   const [imageVersion, setImageVersion] = useState(0)
   const loadedImagesRef = useRef(new Set())
+  const failedImagesRef = useRef(new Set())
   const lengthRef = useRef(Math.max(items.length, 1))
   lengthRef.current = Math.max(items.length, 1)
 
   useEffect(() => {
     if (!hasSlides) {
       loadedImagesRef.current = new Set()
+      failedImagesRef.current = new Set()
       setDisplayedIndex(0)
       return
     }
 
+    failedImagesRef.current = new Set()
     let cancelled = false
 
     items.forEach((item) => {
@@ -71,7 +66,11 @@ export default function Hero() {
         setImageVersion((value) => value + 1)
       }
       img.onload = markLoaded
-      img.onerror = markLoaded
+      img.onerror = () => {
+        if (cancelled || failedImagesRef.current.has(item.image)) return
+        failedImagesRef.current.add(item.image)
+        setImageVersion((value) => value + 1)
+      }
       img.src = item.image
       if (img.complete) markLoaded()
     })
@@ -107,6 +106,9 @@ export default function Hero() {
 
   const activeIndex = hasSlides ? displayedIndex : 0
   const activeSlide = hasSlides ? items[activeIndex] : null
+  const activeSlideImageReady = Boolean(activeSlide?.image)
+    && loadedImagesRef.current.has(activeSlide.image)
+    && !failedImagesRef.current.has(activeSlide.image)
   const capturedMomentsCount = Number.isFinite(Number(settings?.captured_moments_count))
     ? Number(settings.captured_moments_count)
     : 1000
@@ -118,17 +120,17 @@ export default function Hero() {
         src={fallbackHeroImage}
         alt=""
         aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover object-[66%_center] sm:object-center"
+        className="absolute inset-0 z-0 h-full w-full object-cover object-[66%_center] sm:object-center"
         loading="eager"
-        fetchPriority="high"
+        fetchpriority="high"
         decoding="async"
       />
 
-      {hasSlides ? (
+      {hasSlides && activeSlideImageReady && (
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={activeSlide.id}
-            className="absolute inset-0"
+            className="absolute inset-0 z-0"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -142,15 +144,13 @@ export default function Hero() {
             />
           </motion.div>
         </AnimatePresence>
-      ) : (
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(196,160,106,0.22),_transparent_45%),linear-gradient(180deg,_#1b1a1f_0%,_#121117_100%)]" />
       )}
 
       <div className="absolute inset-0 z-[1] bg-[linear-gradient(90deg,rgba(9,6,4,0.88)_0%,rgba(19,12,8,0.76)_27%,rgba(28,18,12,0.48)_48%,rgba(38,25,17,0.18)_70%,rgba(46,31,22,0.10)_100%)]" />
       <div className="absolute inset-0 z-[2] bg-[linear-gradient(180deg,rgba(10,8,6,0.48)_0%,rgba(24,16,11,0.22)_28%,rgba(26,18,12,0.34)_100%)]" />
       <div className="absolute inset-x-4 top-[5.2rem] z-[3] h-px bg-[linear-gradient(90deg,rgba(190,147,86,0.68)_0%,rgba(190,147,86,0.4)_45%,rgba(190,147,86,0.12)_100%)] sm:inset-x-6 sm:top-[5.85rem] lg:inset-x-10 lg:top-[6.45rem]" />
 
-      <div className="absolute inset-0 z-10 flex items-start px-4 pb-5 pt-[5.35rem] text-white sm:items-start sm:px-6 sm:pb-12 sm:pt-[9.9rem] lg:items-center lg:px-10 lg:pb-14 lg:pt-0">
+      <div className="absolute inset-0 z-10 flex items-start px-4 pb-5 pt-[6.1rem] text-white sm:items-start sm:px-6 sm:pb-12 sm:pt-[9.9rem] lg:items-center lg:px-10 lg:pb-14 lg:pt-0">
         <div className="w-full">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
@@ -174,30 +174,27 @@ export default function Hero() {
 
               <div className="mb-4 h-px w-10 bg-[#c39a59] sm:mb-6 sm:w-16 lg:w-20" />
 
-              <p className="min-h-[4.5rem] max-w-[17rem] font-editorial text-[1.1rem] leading-7 text-[#f3ebe0]/88 text-balance sm:min-h-[5.5rem] sm:max-w-[21rem] sm:text-[1.35rem] sm:leading-9 md:max-w-[24rem] md:text-[1.42rem] lg:max-w-[28rem] lg:text-[1.55rem] lg:leading-10">
+              <p className="hidden max-w-[17rem] font-editorial text-[1.1rem] leading-7 text-[#f3ebe0]/88 text-balance sm:block sm:max-w-[21rem] sm:text-[1.35rem] sm:leading-9 md:max-w-[24rem] md:text-[1.42rem] lg:max-w-[28rem] lg:text-[1.55rem] lg:leading-10">
                 {luxurySubtitle}
               </p>
 
-              <div className="mt-5 flex w-full max-w-[18rem] flex-col items-stretch gap-3 sm:mt-8 sm:max-w-[22rem] md:max-w-[24rem] lg:mt-10 lg:max-w-none lg:flex-row lg:items-center lg:gap-4">
+              <div className="mt-40 flex w-full max-w-[16.5rem] flex-col items-stretch gap-2.5 sm:mt-8 sm:max-w-[22rem] md:max-w-[24rem] lg:mt-10 lg:max-w-none lg:flex-row lg:items-center lg:gap-4">
                 <a
                   href="#portfolio"
-                  className="inline-flex min-w-0 items-center justify-center gap-3 rounded-md bg-[#d2aa67] px-5 py-3.5 font-ui text-[0.88rem] font-semibold uppercase tracking-[0.16em] text-[#26180f] shadow-[0_16px_32px_rgba(164,123,58,0.24)] transition-colors hover:bg-[#debc82] sm:px-6 sm:py-3.5 sm:text-sm lg:min-w-[14.5rem] lg:py-4"
+                  className="inline-flex min-w-0 items-center justify-center gap-2.5 rounded-md bg-[#d2aa67] px-4 py-3 font-ui text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-[#26180f] shadow-[0_16px_32px_rgba(164,123,58,0.24)] transition-colors hover:bg-[#debc82] sm:px-6 sm:py-3.5 sm:text-sm lg:min-w-[14.5rem] lg:py-4"
                 >
                   View Portfolio
                   <span aria-hidden="true"><ArrowIcon /></span>
                 </a>
                 <a
                   href="#contact"
-                  className="inline-flex min-w-0 items-center justify-center gap-2 rounded-md border border-[#9f7845] bg-[#1a110c]/34 px-5 py-3.5 font-ui text-[0.88rem] font-semibold uppercase tracking-[0.16em] text-[#f7eddc] backdrop-blur-sm transition-colors hover:bg-[#24160d]/42 sm:px-6 sm:py-3.5 sm:text-sm lg:min-w-[14.5rem] lg:py-4"
+                  className="inline-flex min-w-0 items-center justify-center rounded-md border border-[#9f7845] bg-[#1a110c]/34 px-4 py-3 font-ui text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-[#f7eddc] backdrop-blur-sm transition-colors hover:bg-[#24160d]/42 sm:px-6 sm:py-3.5 sm:text-sm lg:min-w-[14.5rem] lg:py-4"
                 >
                   <span className="whitespace-nowrap">Book a Session</span>
-                  <span className="inline-flex shrink-0 items-center justify-center" aria-hidden="true">
-                    <CalendarIcon />
-                  </span>
                 </a>
               </div>
 
-              <div className="mt-6 grid w-full max-w-[18rem] grid-cols-1 gap-x-4 gap-y-3 text-[#efdfc6] sm:max-w-[22rem] sm:grid-cols-1 md:max-w-[24rem] lg:mt-10 lg:max-w-none lg:grid-cols-[auto_1px_auto_1px_auto] lg:items-start lg:gap-5">
+              <div className="mt-16 grid w-full max-w-[18rem] grid-cols-1 gap-x-4 gap-y-3 text-[#efdfc6] sm:max-w-[22rem] sm:grid-cols-1 md:max-w-[24rem] lg:mt-10 lg:max-w-none lg:grid-cols-[auto_1px_auto_1px_auto] lg:items-start lg:gap-5">
                 <div className="flex min-w-0 items-center gap-2 sm:items-start sm:gap-3">
                   <span className="mt-0.5 scale-90 text-[#d2aa67] sm:scale-100"><PeopleIcon /></span>
                   <div>
