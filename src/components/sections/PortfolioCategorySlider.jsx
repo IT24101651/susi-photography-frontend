@@ -93,22 +93,24 @@ export default function PortfolioCategorySlider({
             <p className="mt-3 max-w-xl font-source-serif text-[1.26rem] leading-7 tracking-[0.01em] text-[#7f7265] sm:text-[1.34rem]">{supportingText}</p>
           </div>
 
-          <div className="flex items-center gap-3 self-start lg:self-auto">
-            <button
-              type="button"
-              className={`${navPrevClass} inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#d7c3a0] bg-white/92 text-[#6f5743] shadow-[0_16px_36px_rgba(86,66,42,0.11)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8945b] hover:text-[#b8945b]`}
-              aria-label={`Previous ${heading} slides`}
-            >
-              &larr;
-            </button>
-            <button
-              type="button"
-              className={`${navNextClass} inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#d7c3a0] bg-white/92 text-[#6f5743] shadow-[0_16px_36px_rgba(86,66,42,0.11)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8945b] hover:text-[#b8945b]`}
-              aria-label={`Next ${heading} slides`}
-            >
-              &rarr;
-            </button>
-          </div>
+          {!showAllCards ? (
+            <div className="flex items-center gap-3 self-start lg:self-auto">
+              <button
+                type="button"
+                className={`${navPrevClass} inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#d7c3a0] bg-white/92 text-[#6f5743] shadow-[0_16px_36px_rgba(86,66,42,0.11)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8945b] hover:text-[#b8945b]`}
+                aria-label={`Previous ${heading} slides`}
+              >
+                &larr;
+              </button>
+              <button
+                type="button"
+                className={`${navNextClass} inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#d7c3a0] bg-white/92 text-[#6f5743] shadow-[0_16px_36px_rgba(86,66,42,0.11)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8945b] hover:text-[#b8945b]`}
+                aria-label={`Next ${heading} slides`}
+              >
+                &rarr;
+              </button>
+            </div>
+          ) : null}
         </div>
 
         {showAllCards ? (
@@ -146,18 +148,20 @@ export default function PortfolioCategorySlider({
               </Swiper>
             </div>
 
-            <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className={`${paginationClass} flex min-h-6 items-center gap-2 [&_.swiper-pagination-bullet]:h-2.5 [&_.swiper-pagination-bullet]:w-2.5 [&_.swiper-pagination-bullet]:bg-[#ccb38a] [&_.swiper-pagination-bullet]:opacity-40 [&_.swiper-pagination-bullet-active]:!w-7 [&_.swiper-pagination-bullet-active]:rounded-full [&_.swiper-pagination-bullet-active]:!bg-[#b8945b] [&_.swiper-pagination-bullet-active]:opacity-100`} />
-              <Link
-                to={viewAllHref}
-                className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[#c9ab74] bg-gradient-to-r from-[#f6ead3] via-[#edd3a4] to-[#d8ae62] px-6 py-3 font-body text-sm uppercase tracking-[0.16em] text-[#3b2815] shadow-[0_18px_34px_rgba(184,148,91,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8945b] hover:from-[#f9eed9] hover:via-[#f0d8ab] hover:to-[#c99847] hover:shadow-[0_22px_38px_rgba(184,148,91,0.3)]"
-              >
-                View All
-                <span aria-hidden="true" className="text-base leading-none transition-transform duration-300 group-hover:translate-x-1">
-                  &rarr;
-                </span>
-              </Link>
-            </div>
+            {!showAllCards ? (
+              <div className="mt-7 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className={`${paginationClass} flex min-h-6 items-center gap-2 [&_.swiper-pagination-bullet]:h-2.5 [&_.swiper-pagination-bullet]:w-2.5 [&_.swiper-pagination-bullet]:bg-[#ccb38a] [&_.swiper-pagination-bullet]:opacity-40 [&_.swiper-pagination-bullet-active]:!w-7 [&_.swiper-pagination-bullet-active]:rounded-full [&_.swiper-pagination-bullet-active]:!bg-[#b8945b] [&_.swiper-pagination-bullet-active]:opacity-100`} />
+                <Link
+                  to={viewAllHref}
+                  className="group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border border-[#c9ab74] bg-gradient-to-r from-[#f6ead3] via-[#edd3a4] to-[#d8ae62] px-6 py-3 font-body text-sm uppercase tracking-[0.16em] text-[#3b2815] shadow-[0_18px_34px_rgba(184,148,91,0.22)] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#b8945b] hover:from-[#f9eed9] hover:via-[#f0d8ab] hover:to-[#c99847] hover:shadow-[0_22px_38px_rgba(184,148,91,0.3)]"
+                >
+                  View All
+                  <span aria-hidden="true" className="text-base leading-none transition-transform duration-300 group-hover:translate-x-1">
+                    &rarr;
+                  </span>
+                </Link>
+              </div>
+            ) : null}
           </>
         )}
       </section>

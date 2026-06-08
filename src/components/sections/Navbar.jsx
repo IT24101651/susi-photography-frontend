@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { useSettings } from '../../hooks/usePublicData'
 import { normalizeUrl } from '../../utils/normalizeUrl'
 
@@ -89,9 +90,13 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
+    document.body.classList.toggle('menu-open', menuOpen)
+    window.dispatchEvent(new CustomEvent('susi-menu-toggle', { detail: { open: menuOpen } }))
 
     return () => {
       document.body.style.overflow = ''
+      document.body.classList.remove('menu-open')
+      window.dispatchEvent(new CustomEvent('susi-menu-toggle', { detail: { open: false } }))
     }
   }, [menuOpen])
 
@@ -166,118 +171,105 @@ export default function Navbar() {
         </div>
       </header>
 
-      <div className={`fixed inset-0 z-[60] transition-opacity duration-300 ${menuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}>
-        <button
-          type="button"
-          className="absolute inset-0 bg-black/45 backdrop-blur-[2px]"
-          onClick={closeMenu}
-          aria-label="Close menu overlay"
-        />
-        <aside className={`absolute right-0 top-0 h-full w-[25rem] max-w-[92vw] border-l border-[#f6e7d3]/10 bg-[linear-gradient(180deg,#19120e_0%,#231913_55%,#2b1f17_100%)] text-[#f6e7d3] shadow-[0_24px_80px_rgba(13,8,5,0.42)] transition-transform duration-300 ease-out ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className="flex h-full flex-col px-8 pb-7 pt-8">
-            <div className="mb-8 flex items-start justify-between border-b border-[#f6e7d3]/10 pb-6">
-              <div className="pr-6">
-                <p className="mb-3 font-ui text-[0.78rem] uppercase tracking-[0.42em] text-[#d4b17a]">
-                  Menu
-                </p>
-              </div>
+      <AnimatePresence>
+        {menuOpen ? (
+          <div className="fixed inset-0 z-[60]">
+            <motion.button
+              type="button"
+              className="absolute inset-0 bg-[rgba(245,238,228,0.72)] backdrop-blur-[3px] sm:bg-black/45"
+              onClick={closeMenu}
+              aria-label="Close menu overlay"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.28, ease: 'easeOut' }}
+            />
 
-              <button
-                type="button"
-                onClick={closeMenu}
-                className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#d9b170]/65 bg-transparent text-[#f6e7d3] transition-colors hover:bg-[#f6e7d3]/10"
-                aria-label="Close menu"
-              >
-                <span className="text-2xl font-light leading-none">&times;</span>
-              </button>
-            </div>
+            <motion.aside
+              className="fixed inset-0 bg-[#f8f1e7] text-[#2d211a] shadow-[0_24px_80px_rgba(13,8,5,0.16)] sm:left-auto sm:right-0 sm:top-0 sm:h-full sm:w-[25rem] sm:max-w-[92vw] sm:border-l sm:border-[#f6e7d3]/10 sm:bg-[linear-gradient(180deg,#19120e_0%,#231913_55%,#2b1f17_100%)] sm:text-[#f6e7d3] sm:shadow-[0_24px_80px_rgba(13,8,5,0.42)]"
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="flex h-full flex-col px-6 pb-6 pt-6 sm:px-8 sm:pb-7 sm:pt-8">
+                <div className="relative flex items-center justify-center pb-5 sm:mb-8 sm:items-start sm:justify-between sm:border-b sm:border-[#f6e7d3]/10 sm:pb-6">
+                  <p className="font-logo text-[1.9rem] uppercase leading-none tracking-[0.01em] text-[#2d211a] sm:hidden">
+                    SUSI
+                  </p>
+                  <div className="hidden pr-6 sm:block">
+                    <p className="mb-3 font-ui text-[0.78rem] uppercase tracking-[0.42em] text-[#d4b17a]">
+                      Menu
+                    </p>
+                  </div>
 
-            <nav className="flex flex-1 flex-col">
-              {NAV_LINKS.map(({ label, href, subtitle, icon }) => (
-                <a
-                  key={href}
-                  href={href}
-                  onClick={closeMenu}
-                  className="group flex items-start justify-between border-b border-[#f6e7d3]/10 py-5 transition-colors duration-300 hover:text-[#fff8ee]"
-                >
-                  <div className="flex items-start gap-4">
-                    <span className="mt-0.5 text-[#d4b17a] transition-colors duration-300 group-hover:text-[#e2bf86]">
-                      <NavItemIcon type={icon} />
-                    </span>
-                    <div>
-                      <p className="font-luxury text-[1.45rem] leading-none tracking-[-0.01em] text-[#f6e7d3] sm:text-[1.65rem]">
-                        {label}
+                  <button
+                    type="button"
+                    onClick={closeMenu}
+                    className="absolute right-0 inline-flex h-14 w-14 items-center justify-center text-[#2d211a] transition-colors hover:text-[#b8945b] sm:static sm:h-12 sm:w-12 sm:rounded-full sm:border sm:border-[#d9b170]/65 sm:bg-transparent sm:text-[#f6e7d3] sm:hover:bg-[#f6e7d3]/10"
+                    aria-label="Close menu"
+                  >
+                    <span className="text-[2.15rem] font-light leading-none sm:text-2xl">&times;</span>
+                  </button>
+                </div>
+                <div className="mb-7 h-px bg-[#d7c4a5]/70 sm:hidden" />
+
+                <div className="flex flex-1 flex-col sm:flex sm:flex-1 sm:flex-col">
+                  <nav className="flex flex-1 flex-col items-center justify-center gap-8 pb-10 pt-8 text-center sm:items-stretch sm:justify-start sm:gap-6 sm:pb-0 sm:pt-0 sm:text-left">
+                    {NAV_LINKS.map(({ label, href, subtitle, icon }, index) => (
+                      <motion.a
+                        key={href}
+                        href={href}
+                        onClick={closeMenu}
+                        className="group w-full border-b border-[#d7c4a5]/50 pb-6 pt-1 text-[#2d211a] transition-colors duration-300 hover:text-[#b8945b] sm:flex sm:items-start sm:justify-between sm:border-b sm:border-[#f6e7d3]/10 sm:py-4 sm:text-[#f6e7d3] sm:hover:text-[#fff8ee]"
+                        initial={{ opacity: 0, y: 18 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, ease: 'easeOut', delay: menuOpen ? 0.12 + index * 0.06 : 0 }}
+                      >
+                        <div className="flex items-start gap-4 sm:gap-4">
+                          <span className="mt-0.5 hidden text-[#d4b17a] transition-colors duration-300 group-hover:text-[#e2bf86] sm:block">
+                            <NavItemIcon type={icon} />
+                          </span>
+                          <div>
+                            <p className="font-heading text-[2.1rem] leading-none tracking-[-0.02em] sm:text-[1.45rem] sm:tracking-[-0.01em]">
+                              {label}
+                            </p>
+                            <p className="mt-1.5 hidden font-editorial text-[0.95rem] leading-6 tracking-[0.01em] text-[#e3d6c3]/82 transition-colors duration-300 group-hover:text-[#f1e7d8]/92 sm:block sm:text-[1rem]">
+                              {subtitle}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="hidden pt-1 text-3xl leading-none text-[#d4b17a] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#e2bf86] sm:block">
+                          &rarr;
+                        </span>
+                      </motion.a>
+                    ))}
+                  </nav>
+
+                  <div className="mt-auto border-t border-[#d7c4a5]/70 pt-5 sm:mt-6 sm:border-t sm:border-[#f6e7d3]/10 sm:pt-6 sm:pb-2">
+                    <div className="flex items-center justify-between">
+                      <p className="font-ui text-[0.92rem] uppercase tracking-[0.34em] text-[#2d211a] sm:text-[0.95rem] sm:text-[#f6e7d3]">
+                        Follow Us
                       </p>
-                      <p className="mt-1.5 font-editorial text-[0.95rem] leading-6 tracking-[0.01em] text-[#e3d6c3]/82 transition-colors duration-300 group-hover:text-[#f1e7d8]/92 sm:text-[1rem]">
-                        {subtitle}
-                      </p>
+                      <div className="flex items-center gap-5 text-[#2d211a]/85 sm:text-[#f6e7d3]/85">
+                        <a href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook" className="transition-colors hover:text-[#b8945b] sm:hover:text-[#d4b17a]">
+                          <FacebookIcon />
+                        </a>
+                        <a href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram" className="transition-colors hover:text-[#b8945b] sm:hover:text-[#d4b17a]">
+                          <InstagramIcon />
+                        </a>
+                        <a href={tiktokUrl} target="_blank" rel="noreferrer" aria-label="TikTok" className="transition-colors hover:text-[#b8945b] sm:hover:text-[#d4b17a]">
+                          <TikTokIcon />
+                        </a>
+                      </div>
                     </div>
                   </div>
-                  <span className="pt-1 text-3xl leading-none text-[#d4b17a] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[#e2bf86]">
-                    →
-                  </span>
-                </a>
-              ))}
-            </nav>
-
-            <div className="mt-7 hidden overflow-hidden rounded-[1.65rem] border border-[#5c4330]/55 bg-[linear-gradient(90deg,#17110d_0%,#221913_55%,#2c2018_100%)] sm:block">
-              <div className="grid grid-cols-[7.25rem_minmax(0,1fr)]">
-                {settings?.hero_card_image ? (
-                  <img
-                    src={settings.hero_card_image}
-                    alt="Featured wedding detail"
-                    className="h-full min-h-[11.5rem] w-full object-cover"
-                  />
-                ) : (
-                  <div className="flex min-h-[11.5rem] items-center justify-center bg-[radial-gradient(circle_at_top,_rgba(212,177,122,0.22),_transparent_42%),linear-gradient(180deg,#5a3c26_0%,#2e1d13_100%)] px-4 text-center">
-                    <p className="font-logo text-3xl uppercase tracking-[0.06em] text-[#f6e7d3]">
-                      SUSI
-                    </p>
-                  </div>
-                )}
-                <div className="flex flex-col justify-between px-5 py-5">
-                  <div>
-                    <p className="font-ui text-[0.78rem] uppercase tracking-[0.34em] text-[#f6e7d3]">
-                      Let's Create
-                    </p>
-                    <p className="mt-1 font-ui text-[0.78rem] uppercase tracking-[0.34em] text-[#f6e7d3]">
-                      Something Beautiful
-                    </p>
-                    <p className="mt-4 font-outfit-light text-[0.96rem] leading-7 tracking-[0.01em] text-[#d5c1a5]/82">
-                      Every love story is unique. Let's capture yours.
-                    </p>
-                  </div>
-                  <a
-                    href="#contact"
-                    onClick={closeMenu}
-                    className="mt-4 inline-flex items-center gap-3 font-ui text-sm font-semibold uppercase tracking-[0.18em] text-[#d4b17a] transition-transform duration-300 hover:translate-x-1"
-                  >
-                    Book a Session
-                    <span aria-hidden="true">→</span>
-                  </a>
                 </div>
               </div>
-            </div>
-
-            <div className="mt-8 flex items-center justify-between">
-              <p className="font-ui text-[0.95rem] uppercase tracking-[0.34em] text-[#f6e7d3]">
-                Follow Us
-              </p>
-              <div className="flex items-center gap-5 text-[#f6e7d3]/85">
-                <a href={facebookUrl} target="_blank" rel="noreferrer" aria-label="Facebook" className="transition-colors hover:text-[#d4b17a]">
-                  <FacebookIcon />
-                </a>
-                <a href={instagramUrl} target="_blank" rel="noreferrer" aria-label="Instagram" className="transition-colors hover:text-[#d4b17a]">
-                  <InstagramIcon />
-                </a>
-                <a href={tiktokUrl} target="_blank" rel="noreferrer" aria-label="TikTok" className="transition-colors hover:text-[#d4b17a]">
-                  <TikTokIcon />
-                </a>
-              </div>
-            </div>
+            </motion.aside>
           </div>
-        </aside>
-      </div>
+        ) : null}
+      </AnimatePresence>
     </>
   )
 }

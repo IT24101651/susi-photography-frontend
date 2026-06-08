@@ -1,4 +1,5 @@
 import { FaWhatsapp } from 'react-icons/fa'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useSettings } from '../../hooks/usePublicData'
 
@@ -46,8 +47,22 @@ function WhatsAppIcon({ className = 'h-7 w-7' }) {
 export default function FloatingContactButtons() {
   const { pathname } = useLocation()
   const { data: settings } = useSettings()
+  const [menuOpen, setMenuOpen] = useState(false)
 
-  if (pathname.startsWith('/admin')) return null
+  useEffect(() => {
+    const handleMenuToggle = (event) => {
+      setMenuOpen(Boolean(event?.detail?.open))
+    }
+
+    setMenuOpen(document.body.classList.contains('menu-open'))
+    window.addEventListener('susi-menu-toggle', handleMenuToggle)
+
+    return () => {
+      window.removeEventListener('susi-menu-toggle', handleMenuToggle)
+    }
+  }, [])
+
+  if (pathname.startsWith('/admin') || menuOpen) return null
 
   const phone = settings?.phone?.trim() || DEFAULT_PHONE
   const contact = normalizeSriLankanPhone(phone)
